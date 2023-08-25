@@ -24,24 +24,30 @@ runs:
         repository: rajaSahil/accuknox-cli
         ref: feat-report
         path: accuknox-cli
-        run: |
-          cd accuknox-cli
-          make install
-          accuknox-cli version
 
-          setupArgs=""
-          if [ "${{ inputs.kubearmor-image }}" != "" ]; then
-            setupArgs+= " -i ${{ inputs.kubearmor-image }}"
-          fi
-          if [ "${{ inputs.discovery-engine-image }}" != "" ];then
-            setupArgs += " -di ${{ inputs.discovery-engine-image }}"
-          fi
-          if [ "${{ inputs.workload-namespace }}" != "" ];then
-            setupArgs += " -n ${{ inputs.workload-namespace }}"
-          fi
-
-          accuknox-cli install $setupArgs
-        shell: bash
+    - name: Install accuknox-cli, KubeArmor and Discovery Engine
+      run: |
+        cd accuknox-cli
+        chmod +x accuknox-cli
+        sudo mv accuknox-cli /usr/bin/
+        accuknox-cli version
+        accuknox-cli install
+#        make install
+#        accuknox-cli version
+#
+#        setupArgs=""
+#        if [ "${{ inputs.kubearmor-image }}" != "" ]; then
+#          setupArgs+= " -i ${{ inputs.kubearmor-image }}"
+#        fi
+#        if [ "${{ inputs.discovery-engine-image }}" != "" ];then
+#          setupArgs += " -di ${{ inputs.discovery-engine-image }}"
+#        fi
+#        if [ "${{ inputs.workload-namespace }}" != "" ];then
+#          setupArgs += " -n ${{ inputs.workload-namespace }}"
+#        fi
+#
+#        accuknox-cli install $setupArgs
+      shell: bash
 
 branding:
   icon: 'shield'
