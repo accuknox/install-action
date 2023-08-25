@@ -31,6 +31,7 @@ runs:
         chmod +x accuknox-cli
         sudo mv accuknox-cli /usr/bin/
         accuknox-cli version
+        accuknox-cli install
 #        make install
 #        accuknox-cli version
 #
