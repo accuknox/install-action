@@ -73,8 +73,7 @@ jobs:
             ./Kubearmor/contribution/k3s/install_k3s.sh
              sudo apt install socat
         
-        - name: accuknox-install
-          id: install-accuknox
+        - name: Install accuknoxcli, KubeArmor and Discovery Engine
           uses: accuknox/install-action@v0.1.1  
 
 ```
