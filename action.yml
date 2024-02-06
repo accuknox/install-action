@@ -1,54 +1,32 @@
 name: accuknox-install
-description: 'Install accuknox-cli, kubearmor and discovery engine '
-inputs:
+description: 'Install knoxctl, kubearmor and discovery engine '
+inputs: # disabling these inputs for now
   kubearmor-image: 
     description: 'kubearmor image to be installed'
-    required: true
-    default: ""
-  discovery-engine-image:
-    description: 'discovery engine image to be installed'
-    required: true
-    default: ""
-  workload-namespace:
-    description: 'workload namespaces'
     required: false
     default: ""
-
+  discovery-engine-image: # we can change it to tag since discovery engine does not have a single image
+    description: 'discovery engine image to be installed'
+    required: false
+    default: ""
 
 runs:
   using: "composite"
   steps:
-    - name: Checkout accuknox-cli repo and install kubearmor and discovery engine
+    - name: Checkout actions
       uses: actions/checkout@v3
-      with:
-        repository: rajaSahil/accuknox-cli
-        ref: feat-report
-        path: accuknox-cli
 
-    - name: Install accuknox-cli, KubeArmor and Discovery Engine
+    # Assuming k3s will be installed by user
+    - name: Install knoxctl, KubeArmor and Discovery Engine
       run: |
-        cd accuknox-cli
-        chmod +x accuknox-cli
-        sudo mv accuknox-cli /usr/bin/
-        accuknox-cli version
-        accuknox-cli install
-#        make install
-#        accuknox-cli version
-#
-#        setupArgs=""
-#        if [ "${{ inputs.kubearmor-image }}" != "" ]; then
-#          setupArgs+= " -i ${{ inputs.kubearmor-image }}"
-#        fi
-#        if [ "${{ inputs.discovery-engine-image }}" != "" ];then
-#          setupArgs += " -di ${{ inputs.discovery-engine-image }}"
-#        fi
-#        if [ "${{ inputs.workload-namespace }}" != "" ];then
-#          setupArgs += " -n ${{ inputs.workload-namespace }}"
-#        fi
-#
-#        accuknox-cli install $setupArgs
+        tag=$(curl -sL https://knoxctl.accuknox.com/version/latest_version.txt | cut -d "v" -f2) && \
+        curl -sLO "https://knoxctl.accuknox.com/binaries/accuknoxcli_${tag}_linux_amd64.tar.gz" && \
+        tar -xvzf "accuknoxcli_${tag}_linux_amd64.tar.gz" && \
+        chmod +x ./knoxctl && \
+        sudo mv ./knoxctl /usr/local/bin
+
+        knoxctl --help 
+        knoxctl version
+        knoxctl install
       shell: bash
 
-branding:
-  icon: 'shield'
-  color: 'blue'
